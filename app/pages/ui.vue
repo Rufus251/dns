@@ -24,7 +24,6 @@
     <div>
       <h2>Table</h2>
       <Table :headers="headers" :rows="rows">
-        <!-- Кастомный заголовок для 3-го столбца -->
         <template #header-2>
           <span>Статус11</span>
         </template>
