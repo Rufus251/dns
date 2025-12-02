@@ -34,6 +34,14 @@
         </template>
       </Table>
     </div>
+    <div>
+      <h2>application list widget</h2>
+      <ApplicationList />
+    </div>
+    <div>
+      <h2>application edit widget</h2>
+      <ApplicationEdit :application-id="1" />
+    </div>
   </div>
 </template>
 
@@ -43,6 +51,8 @@ import Button from "~/shared/ui/Button.vue";
 import Input from "@/shared/ui/Input.vue";
 import Select from "@/shared/ui/Select.vue";
 import Table from "@/shared/ui/Table.vue";
+import ApplicationList from "~/widgets/application-list/ApplicationList.vue";
+import ApplicationEdit from "~/widgets/application-edit/ApplicationEdit.vue";
 
 // Button
 const { showError } = useToast();

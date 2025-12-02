@@ -54,12 +54,12 @@ export const useApplicationList = () => {
   };
 
   const reload = () => loadApplications();
-  onMounted(loadApplications);
 
   return {
     applications,
     loading,
     error,
+    loadApplications,
     reload,
   };
 };

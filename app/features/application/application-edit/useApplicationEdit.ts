@@ -3,7 +3,7 @@ import {
   getLocalStorageItem,
   setLocalStorageItem,
 } from "@/shared/lib/localStorage";
-import { validateForm } from "@/shared/lib/validation";
+import { validateForm, validators } from "@/shared/lib/validation";
 import { fetchEditableProducts } from "./api";
 import type { EditableProduct, ApplicationEditForm } from "../types";
 import type { ProductColor } from "@/entities/product/model/types";
@@ -16,6 +16,7 @@ export const useApplicationEdit = (applicationId: number) => {
   const loading = ref(false);
   const error = ref<string | null>(null);
   const validationError = ref<string | null>(null);
+  const validationErrors = ref<Record<string, string>>({});
 
   const loadProducts = async (): Promise<EditableProduct[]> => {
     const cached = getLocalStorageItem<EditableProduct[]>(PRODUCTS_CACHE_KEY);
@@ -42,45 +43,37 @@ export const useApplicationEdit = (applicationId: number) => {
 
   const save = (): boolean => {
     validationError.value = null;
+    validationErrors.value = {};
 
     const rules = products.value.flatMap((product, idx) => {
       const prefix = `products.${idx}`;
       return [
         {
           field: `${prefix}.quantity`,
-          validator: "quantity",
+          validator: "integer",
           value: product.quantity,
-          isValid: (val: unknown) => {
-            if (typeof val !== "string") return false;
-            const s = val.trim();
-            return s !== "" && /^\d+(\.\d+)?$/.test(s);
-          },
-          message: "Некорректное количество",
+          isValid: validators.integer,
+          errorMessage: "Количество должно быть целым числом",
         },
         {
           field: `${prefix}.price`,
-          validator: "price",
+          validator: "decimal",
           value: product.price,
-          isValid: (val: unknown) => {
-            if (typeof val !== "string") return false;
-            const s = val.trim();
-            return s !== "" && /^\d+(\.\d+)?$/.test(s);
-          },
-          message: "Некорректная цена",
+          isValid: validators.decimal,
+          errorMessage: "Некорректная цена",
         },
         {
           field: `${prefix}.color`,
-          validator: "color",
+          validator: "inList",
           value: product.color,
-          isValid: (val: unknown) => {
-            return val !== null && COLOR_OPTIONS.includes(val as ProductColor);
-          },
-          message: "Выберите цвет",
+          isValid: validators.inList(COLOR_OPTIONS),
+          errorMessage: "Выберите цвет из списка",
         },
       ];
     });
 
     const formErrors = validateForm(rules);
+    validationErrors.value = formErrors;
 
     if (Object.keys(formErrors).length > 0) {
       validationError.value = "Ошибка валидации";
@@ -99,8 +92,9 @@ export const useApplicationEdit = (applicationId: number) => {
   return {
     products,
     loading,
-    error, // ошибка загрузки
-    validationError, // ошибка валидации
+    error,
+    validationError,
+    validationErrors,
     colorOptions: COLOR_OPTIONS,
     loadProducts,
     save,

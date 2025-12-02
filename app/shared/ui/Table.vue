@@ -60,7 +60,6 @@ withDefaults(
 .tableWrapper {
   border: 1px solid $stroke-border;
   border-radius: 12px;
-  overflow: hidden;
 }
 
 .table {

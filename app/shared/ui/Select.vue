@@ -2,7 +2,7 @@
   <!-- ИИ компонент с минимальными изменениями, не было времени -->
   <!-- TODO: чекнуть чё тут происходит -->
   <div
-    :class="$style.wrapper"
+    :class="[$style.wrapper, hasError ? $style.hasError : '']"
     @click="toggle"
     @keyup.enter="toggle"
     @keyup.space="toggle"
@@ -55,10 +55,12 @@ const props = withDefaults(
     modelValue?: string | number | null;
     options: { value: string | number; label: string }[];
     placeholder?: string;
+    hasError?: boolean;
   }>(),
   {
     modelValue: undefined,
     placeholder: "Выберите...",
+    hasError: false,
   }
 );
 
@@ -110,8 +112,7 @@ onUnmounted(() => {
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  width: 426px;
-  height: 36px;
+  width: 100%;
   min-height: 36px;
   max-height: 36px;
   padding: 8px 8px 8px 12px;
@@ -133,6 +134,10 @@ onUnmounted(() => {
   &:focus {
     border-color: $border-dark;
   }
+}
+
+.hasError {
+  border: 1px solid $border-error;
 }
 
 .selectedText {

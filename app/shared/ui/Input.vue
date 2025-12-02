@@ -4,7 +4,7 @@
   <div :class="$style.wrapper">
     <input
       v-model="localValue"
-      :class="$style.input"
+      :class="[$style.input, hasError ? $style.hasError : '']"
       :placeholder="placeholder"
       @focus="isFocused = true"
       @blur="isFocused = false"
@@ -23,52 +23,53 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch } from "vue";
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: string
-    placeholder?: string
+    modelValue?: string;
+    placeholder?: string;
+    hasError?: boolean;
   }>(),
   {
-    modelValue: '',
-    placeholder: ''
+    modelValue: "",
+    placeholder: "",
+    hasError: false,
   }
-)
+);
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void
-}>()
+  (e: "update:modelValue", value: string): void;
+}>();
 
-const localValue = ref(props.modelValue)
-const isFocused = ref(false)
+const localValue = ref(props.modelValue);
+const isFocused = ref(false);
 
 watch(
   () => props.modelValue,
   (newValue) => {
-    localValue.value = newValue
+    localValue.value = newValue;
   }
-)
+);
 
 watch(localValue, (newValue) => {
-  emit('update:modelValue', newValue)
-})
+  emit("update:modelValue", newValue);
+});
 
 const clear = () => {
-  localValue.value = ''
-  emit('update:modelValue', '')
-}
+  localValue.value = "";
+  emit("update:modelValue", "");
+};
 </script>
 
 <style lang="scss" module>
-@use '@/shared/styles/vars' as *;
+@use "@/shared/styles/vars" as *;
 
 .wrapper {
   position: relative;
   display: inline-flex;
   align-items: center;
-  width: 426px;
-  height: 36px;
+  width: 100%;
 }
 
 .input {
@@ -98,6 +99,10 @@ const clear = () => {
     outline: none;
     border-color: $border-brand;
   }
+}
+
+.hasError {
+  border: 1px solid $border-error;
 }
 
 .clearButton {

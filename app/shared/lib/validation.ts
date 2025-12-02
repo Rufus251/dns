@@ -68,8 +68,21 @@ export const validators = {
       return value.length <= max;
     },
 
-  quantity: (value: unknown): boolean => {
+  integer: (value: unknown): boolean => {
     if (typeof value !== "string") return false;
-    return /^\d+(\.\d+)?$/.test(value.trim()) && value.trim() !== "";
+    const s = value.trim();
+    return s !== "" && /^\d+$/.test(s);
   },
+
+  decimal: (value: unknown): boolean => {
+    if (typeof value !== "string") return false;
+    const s = value.trim();
+    return s !== "" && /^\d+(\.\d+)?$/.test(s);
+  },
+
+  inList:
+    <T>(list: T[]) =>
+    (value: unknown): boolean => {
+      return list.includes(value as T);
+    },
 };
