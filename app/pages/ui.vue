@@ -35,6 +35,10 @@
       </Table>
     </div>
     <div>
+      <h2>sidebar</h2>
+      <Sidebar v-model="activeTab" :items="sidebarItems" @toggle="onToggle" />
+    </div>
+    <div>
       <h2>application list widget</h2>
       <ApplicationList />
     </div>
@@ -51,8 +55,12 @@ import Button from "~/shared/ui/Button.vue";
 import Input from "@/shared/ui/Input.vue";
 import Select from "@/shared/ui/Select.vue";
 import Table from "@/shared/ui/Table.vue";
+import Sidebar from '@/shared/ui/Sidebar/Sidebar.vue';
 import ApplicationList from "~/widgets/application-list/ApplicationList.vue";
 import ApplicationEdit from "~/widgets/application-edit/ApplicationEdit.vue";
+import type { SidebarItem } from "~/shared/ui/Sidebar/types";
+
+import SidebarIcon from "@/assets/sidebar-icon.svg";
 
 // Button
 const { showError } = useToast();
@@ -73,10 +81,23 @@ const colorOptions = [
   { value: "blue", label: "Синий" },
 ];
 
+// Sidebar
+const sidebarItems: SidebarItem[] = [
+  { id: "applications", icon: SidebarIcon, text: "Заявки" },
+  { id: "analytics", icon: SidebarIcon, text: "Аналитика" },
+  { id: "settings", icon: SidebarIcon, text: "Настройки" },
+];
+
+const activeTab = ref("applications");
+
+const onToggle = (expanded: boolean) => {
+  console.log("Sidebar toggled:", expanded);
+};
+
 // Table
-const headers = ["Номер", "Создано", "Статус", "Действие", 'test'];
+const headers = ["Номер", "Создано", "Статус", "Действие", "test"];
 const rows = [
-  [1, "2025-03-10", "Черновик", '1', '123'],
-  [2, "2025-03-11", "Проверка", '1', '123'],
+  [1, "2025-03-10", "Черновик", "1", "123"],
+  [2, "2025-03-11", "Проверка", "1", "123"],
 ];
 </script>

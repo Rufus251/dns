@@ -1,4 +1,4 @@
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { getLocalStorageItem } from "@/shared/lib/localStorage";
 import { fetchApplications } from "./api";
 import type { Application } from "@/entities/application/model/types";

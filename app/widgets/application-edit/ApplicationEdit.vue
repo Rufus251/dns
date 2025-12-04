@@ -1,14 +1,11 @@
 <template>
   <div class="application-edit">
-    <div v-if="error" class="application-edit__error">
-      {{ error }}
-    </div>
-
-    <div v-else-if="loading" class="application-edit__loading">
-      Загрузка товаров...
-    </div>
+    <Loader v-if="loading" />
 
     <form v-else class="application-edit__form" @submit.prevent="onSubmit">
+      <div class="application-edit__actions">
+        <Button type="submit" variant="primary">Сохранить</Button>
+      </div>
       <Table
         :headers="headers"
         :rows="tableRows"
@@ -45,14 +42,6 @@
           />
         </template>
       </Table>
-
-      <div v-if="validationError" class="application-edit__validation-error">
-        {{ validationError }}
-      </div>
-
-      <div class="application-edit__actions">
-        <Button type="submit" variant="primary">Сохранить</Button>
-      </div>
     </form>
   </div>
 </template>
@@ -69,6 +58,7 @@ import {
 } from "@/features/application/application-edit/useApplicationEdit";
 import type { ProductColor } from "@/entities/product/model/types";
 import type { EditableProduct } from "~/features/application/types";
+import Loader from "@/shared/ui/Loader.vue";
 
 const props = defineProps<{
   applicationId: number;
@@ -109,7 +99,7 @@ const updateField = (
   if (validationErrors.value[validationKey] !== undefined) {
     const { [validationKey]: _, ...newErrors } = validationErrors.value;
     validationErrors.value = newErrors;
-    
+
     if (Object.keys(newErrors).length === 0) {
       validationError.value = null;
     }
@@ -180,7 +170,7 @@ const onSubmit = () => {
   }
 
   &__table {
-    margin-bottom: 24px;
+    margin-top: 20px;
   }
 
   &__name {
@@ -189,6 +179,7 @@ const onSubmit = () => {
   }
 
   &__actions {
+    margin-top: 8px;
     display: flex;
     justify-content: flex-end;
   }

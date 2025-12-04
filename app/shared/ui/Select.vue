@@ -3,9 +3,7 @@
   <!-- TODO: чекнуть чё тут происходит -->
   <div
     :class="[$style.wrapper, hasError ? $style.hasError : '']"
-    @click="toggle"
-    @keyup.enter="toggle"
-    @keyup.space="toggle"
+    @click.stop="toggle"
     tabindex="0"
     role="combobox"
     :aria-expanded="isOpen"
@@ -30,7 +28,7 @@
             $style.item,
             { [$style.selected]: option.value === modelValue },
           ]"
-          @click="select(option)"
+          @click.stop="select(option)"
           @mouseenter="hoveredValue = option.value"
           @mouseleave="hoveredValue = null"
         >

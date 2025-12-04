@@ -1,9 +1,6 @@
 <template>
   <div class="application-list">
-    <div v-if="loading" class="application-list__loading">
-      Загрузка заявок...
-    </div>
-
+    <Loader v-if="loading" />
     <Table
       v-else
       :headers="headers"
@@ -23,18 +20,16 @@
       </template>
 
       <template #cell-4="{ cell }">
-        <div class="application-list__actions">
-          <Button v-if="!cell.hasDraft" @click="onEdit(cell.id)">
-            Редактировать
-          </Button>
-          <Button
-            v-else
-            :disabled="sendingId === cell.id"
-            @click="onSend(cell.id)"
-          >
-            {{ sendingId === cell.id ? "Отправка..." : "Отправить" }}
-          </Button>
-        </div>
+        <Button v-if="!cell.hasDraft" variant="secondary" @click="onEdit(cell.id)">
+          Редактировать
+        </Button>
+        <Button
+          v-else
+          :disabled="sendingId === cell.id"
+          @click="onSend(cell.id)"
+        >
+          {{ sendingId === cell.id ? "Отправка..." : "Отправить" }}
+        </Button>
       </template>
     </Table>
   </div>
@@ -48,9 +43,9 @@ import {
   type ApplicationListItem,
 } from "@/features/application/application-list/useApplicationList";
 import { useApplicationSend } from "@/features/application/application-send/useApplicationSend";
-import { navigateTo } from "#imports";
 import { ref } from "vue";
 import { useToast } from "~/shared/lib/toast/useToast";
+import Loader from "@/shared/ui/Loader.vue";
 
 const { applications, loading, error, loadApplications, reload } =
   useApplicationList();
@@ -59,8 +54,12 @@ const toast = useToast();
 
 const sendingId = ref<number | null>(null);
 
+const emit = defineEmits<{
+  (e: "change", id: number): void;
+}>();
+
 const onEdit = (id: number) => {
-  navigateTo(`/edit?id=${id}`);
+  emit("change", id);
 };
 
 const onSend = async (id: number) => {
@@ -90,11 +89,12 @@ const tableRows = computed(() =>
 );
 
 onMounted(() => {
-  try {
-    loadApplications();
-  } catch (e) {
-    toast.showError(error.value ?? "Ошибка загрузки...");
-  }
+  loadApplications();
+  console.log("table mounted");
+});
+
+onUnmounted(() => {
+  console.log("table unmounted");
 });
 </script>
 
@@ -111,21 +111,6 @@ onMounted(() => {
     border: 1px solid var(--color-error);
     border-radius: 4px;
     margin-bottom: 16px;
-  }
-
-  &__loading {
-    padding: 24px;
-    text-align: center;
-    color: var(--color-text-secondary);
-  }
-
-  &__table {
-    margin-top: 16px;
-  }
-
-  &__actions {
-    display: flex;
-    gap: 8px;
   }
 
   &__status {
