@@ -12,36 +12,42 @@
           <h1>Товары</h1>
         </div>
       </template>
-      <Suspense>
-        <template #default>
-          <ApplicationEdit :applicationId="applicationId" @save="onSave" />
-        </template>
-        <template #fallback>
-          <Loader />
-        </template>
-      </Suspense>
+
+      <ApplicationEdit
+        v-if="!pending"
+        :initial-products="resolvedProducts"
+        :application-id="applicationId"
+        @save="onSave"
+      />
+      <Loader v-else />
     </Container>
   </div>
 </template>
 
 <script setup lang="ts">
+import { fetchApplicationProducts } from "@/features/application/application-edit/api";
 import ApplicationEdit from "@/widgets/application-edit/ApplicationEdit.vue";
 import Loader from "@/shared/ui/Loader.vue";
-
 import Container from "@/shared/ui/Container.vue";
+
 
 const route = useRoute();
 const applicationId = Number(route.query.id);
 if (isNaN(applicationId) || applicationId <= 0) {
-  throw new Error("Invalid application ID");
+  throw createError({ statusCode: 400, message: "Invalid application ID" });
 }
 
-function onSave() {
-  navigateTo("/");
-}
-function backToList() {
-  navigateTo("/");
-}
+const { data: products, pending, error } = await useAsyncData(
+  `application-products-${applicationId}`,
+  () => fetchApplicationProducts(),
+  {
+    default: () => [],
+  }
+);
+const resolvedProducts = error.value ? [] : products.value ?? [];
+
+const onSave = () => navigateTo("/");
+const backToList = () => navigateTo("/");
 </script>
 
 <style lang="scss" module>
@@ -52,7 +58,6 @@ function backToList() {
   height: 100vh;
   background-color: $background-primary;
   padding: 24px;
-
   display: flex;
   gap: 12px;
 }

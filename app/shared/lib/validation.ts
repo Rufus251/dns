@@ -46,6 +46,14 @@ export const validateForm = (rules: ValidationRule[]): ValidationErrors => {
   return errors;
 };
 
+export const clearValidationError = (
+  errors: Record<string, string>,
+  key: string
+): Record<string, string> => {
+  const { [key]: _, ...rest } = errors;
+  return rest;
+};
+
 export const validators = {
   required: (value: unknown): boolean => {
     if (value == null) return false;
