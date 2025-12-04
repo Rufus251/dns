@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import Table from "@/shared/ui/Table.vue";
+import Table from "@/shared/ui/TableGrid.vue";
 import Button from "@/shared/ui/Button.vue";
 import {
   useApplicationList,

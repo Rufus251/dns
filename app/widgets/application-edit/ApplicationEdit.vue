@@ -46,7 +46,7 @@
 // Core
 import { computed } from "vue";
 // UI Components
-import Table from "@/shared/ui/Table.vue";
+import Table from "@/shared/ui/TableGrid.vue";
 import Input from "@/shared/ui/Input.vue";
 import Select from "@/shared/ui/Select.vue";
 import Button from "@/shared/ui/Button.vue";
