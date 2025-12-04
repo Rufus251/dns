@@ -8,7 +8,7 @@ import { setLocalStorageItem } from "@/shared/lib/localStorage";
 import type { EditableProduct, ApplicationEditForm } from "../types";
 import type { ProductColor } from "@/entities/product/model/types";
 
-export const COLOR_OPTIONS: ProductColor[] = ["blue", "red", "green", "yellow"];
+export const COLOR_OPTIONS: ProductColor[] = ["Белый", "Чёрный", "Синий", "Красный", "Зелёный", "Жёлтый"];
 
 // HARD_VALIDATION — если true, ошибки не будут очищаться при изменении полей
 export const useApplicationEditForm = (

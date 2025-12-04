@@ -1,4 +1,4 @@
-export type ProductColor = 'blue' | 'red' | 'green' | 'yellow';
+export type ProductColor = 'Белый' | 'Чёрный' | 'Синий' | 'Красный' | 'Зелёный' | 'Жёлтый';
 
 export interface Product {
   id: number;
